@@ -12,11 +12,9 @@ module Skiplist
   )
 where
 
-import Data.Char (isDigit)
 import Data.Foldable (find)
 import qualified Data.Text as T
 import OurPrelude
-import Text.Regex.Applicative.Text (RE', few, psym, string, (=~))
 
 type Skiplist = [(Text -> Bool, Text)]
 
@@ -106,9 +104,7 @@ attrPathList =
     eq "qemu-utils" "updates via qemu package",
     eq "ollama-rocm" "only `ollama` is explicitly updated (defined in the same file)",
     eq "ollama-cuda" "only `ollama` is explicitly updated (defined in the same file)",
-    regex
-      (string "python" *> few (psym isDigit) *> string "Packages.mmengine")
-      "takes way too long to build",
+    eq "python3Packages.mmengine" "takes way too long to build",
     eq "bitwarden-directory-connector-cli" "src is aliased to bitwarden-directory-connector",
     eq "vaultwarden-mysql" "src is aliased to vaultwarden",
     eq "vaultwarden-postgresql" "src is aliased to vaultwarden",
@@ -129,9 +125,6 @@ nameList =
     infixOf "cdrtools" "We keep downgrading this by accident.",
     infixOf "gst" "gstreamer plugins are kept in lockstep.",
     infixOf "electron" "multi-platform srcs in file.",
-    infixOf
-      "linux-headers"
-      "Not updated until many packages depend on it (part of stdenv).",
     infixOf "xfce" "@volth asked to not update xfce",
     infixOf "cmake-cursesUI-qt4UI" "Derivation file is complicated",
     infixOf "iana-etc" "@mic92 takes care of this package",
@@ -253,9 +246,6 @@ infixOf part reason = ((part `T.isInfixOf`), reason)
 
 eq :: Text -> Text -> (Text -> Bool, Text)
 eq part reason = ((part ==), reason)
-
-regex :: RE' a -> Text -> (Text -> Bool, Text)
-regex pat reason = (isJust . (=~ pat), reason)
 
 python :: Monad m => Int -> Text -> ExceptT Text m ()
 python numPackageRebuilds derivationContents =
