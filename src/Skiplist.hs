@@ -99,6 +99,7 @@ attrPathList =
     eq "vmagent" "updates via victoriametrics package",
     eq "qemu_full" "updates via qemu package",
     eq "qemu_kvm" "updates via qemu package",
+    eq "qemu_test" "updates via qemu package",
     eq "qemu-user" "updates via qemu package",
     eq "qemu-utils" "updates via qemu package",
     eq "ollama-rocm" "only `ollama` is explicitly updated (defined in the same file)",
